@@ -45,5 +45,15 @@ class StationRegistryTest {
         assertEquals(StationType.INTERMEDIATE, kostyukovka.type());
         assertEquals(12, kostyukovka.distanceFromGomelKm());
     }
+
+    @Test
+    @DisplayName("Справочник содержит станцию Словечно с расстояние 199км")
+    void containsSlovechno() {
+        Station slovechno = station("Словечно");
+        assertEquals(StationType.FREIGHT, slovechno.type());
+        assertEquals(Line.KALINKOVICHI_SLOVECHNO, slovechno.line());
+        assertEquals(199, slovechno.distanceFromGomelKm());
+    }
+
     // тесты новых станций и методов добавляются в конец класса
 }

@@ -7,3 +7,4 @@
 | --- | --- | --- | --- |
 | Гомель-Пассажирский | GOMEL_ZHLOBIN | PASSENGER | 0 |
 | Костюковка | GOMEL_ZHLOBIN | INTERMEDIATE | 12 |
+| Словечно | KALINKOVICHI_SLOVECHNO | FREIGHT | 199 |
