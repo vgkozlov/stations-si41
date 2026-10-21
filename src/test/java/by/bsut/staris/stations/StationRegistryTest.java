@@ -57,5 +57,14 @@ class StationRegistryTest {
         assertEquals(StationType.INTERMEDIATE, kostyukovka.type());
         assertEquals(12, kostyukovka.distanceFromGomelKm());
     }
+
+        @Test
+    @DisplayName("Справочник содержит станцию Речица с корректными атрибутами")
+    void containsRechitsa() {
+        Station rechitsa = station("Речица");
+        assertEquals(Line.GOMEL_KALINKOVICHI, rechitsa.line());
+        assertEquals(StationType.INTERMEDIATE, rechitsa.type());
+        assertEquals(44, rechitsa.distanceFromGomelKm());
+    }
     // тесты новых станций и методов добавляются в конец класса
 }
