@@ -10,4 +10,5 @@
 | Ельск | GOMEL_ELSK | FREIGHT | 165 |
 
 | Костюковка | GOMEL_ZHLOBIN | INTERMEDIATE | 12 |
+| Тереховка | GOMEL_BAKHMACH | INTERMEDIATE | 42 |
 
