@@ -11,3 +11,5 @@
 
 | Костюковка | GOMEL_ZHLOBIN | INTERMEDIATE | 12 |
 
+| Речица | GOMEL_KALINKOVICHI | INTERMEDIATE | 44 |
+
