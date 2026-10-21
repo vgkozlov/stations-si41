@@ -57,5 +57,14 @@ class StationRegistryTest {
         assertEquals(StationType.INTERMEDIATE, kostyukovka.type());
         assertEquals(12, kostyukovka.distanceFromGomelKm());
     }
+
+    @Test
+    @DisplayName("Справочник содержит станцию Тереховка на направлении Гомель – Бахмач, 42 км от Гомеля")
+    void containsTerekhovka() {
+        Station terekhovka = station("Тереховка");
+        assertEquals(Line.GOMEL_BAKHMACH, terekhovka.line());
+        assertEquals(StationType.INTERMEDIATE, terekhovka.type());
+        assertEquals(42, terekhovka.distanceFromGomelKm());
+    }
     // тесты новых станций и методов добавляются в конец класса
 }
