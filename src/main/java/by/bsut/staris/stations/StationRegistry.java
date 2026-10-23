@@ -11,7 +11,9 @@ public final class StationRegistry {
         new Station("Ельск", Line.GOMEL_ELSK, StationType.FREIGHT, 165),
 
 
-        new Station ("Костюковка", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 12)
+        new Station ("Костюковка", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 12),
+
+            new Station("Василевичи", Line.GOMEL_LUNINETS, StationType.PASSENGER, 89)
 
         // новые станции добавляются в конец списка
     );
@@ -21,5 +23,15 @@ public final class StationRegistry {
         return stations;
     }
 
+    public List<String> namesStartingWith(String prefix) {
+        if (prefix == null) {
+            throw new IllegalArgumentException("Префикс не может быть null");
+        }
+        return stations.stream()
+                .map(Station::name)
+                .filter(name -> name.toLowerCase().startsWith(prefix.toLowerCase()))
+                .sorted()
+                .toList();
+    }
     // новые методы добавляются в конец класса
 }

@@ -11,3 +11,4 @@
 
 | Костюковка | GOMEL_ZHLOBIN | INTERMEDIATE | 12 |
 
+| Василевичи | GOMEL_LUNINETS | PASSENGER | 89 |
