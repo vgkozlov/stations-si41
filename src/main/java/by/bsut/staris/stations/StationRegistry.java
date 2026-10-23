@@ -21,5 +21,15 @@ public final class StationRegistry {
         return stations;
     }
 
+    public List<String> namesStartingWith(String prefix) {
+        if (prefix == null) {
+            throw new IllegalArgumentException("Префикс не может быть null");
+        }
+        return stations.stream()
+                .map(Station::name)
+                .filter(name -> name.toLowerCase().startsWith(prefix.toLowerCase()))
+                .sorted()
+                .toList();
+    }
     // новые методы добавляются в конец класса
 }

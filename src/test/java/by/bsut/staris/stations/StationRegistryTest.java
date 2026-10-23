@@ -3,8 +3,7 @@ package by.bsut.staris.stations;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class StationRegistryTest {
 
@@ -56,6 +55,26 @@ class StationRegistryTest {
         Station kostyukovka = station("Костюковка");
         assertEquals(StationType.INTERMEDIATE, kostyukovka.type());
         assertEquals(12, kostyukovka.distanceFromGomelKm());
+    }
+
+    @Test
+    @DisplayName("Возвращает отсортированный список станций, начинающихся с заданного префикса")
+    void namesStartingWith_findsStations() {
+        java.util.List<String> result = registry.namesStartingWith("го");
+        assertEquals(java.util.List.of("Гомель-Пассажирский"), result);
+    }
+
+    @Test
+    @DisplayName("Возвращает пустой список, если совпадений нет")
+    void namesStartingWith_returnsEmpty() {
+        java.util.List<String> result = registry.namesStartingWith("яблоко");
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Выбрасывает исключение при передаче null")
+    void namesStartingWith_throwsExceptionOnNull() {
+        assertThrows(IllegalArgumentException.class, () -> registry.namesStartingWith(null));
     }
     // тесты новых станций и методов добавляются в конец класса
 }
