@@ -11,7 +11,9 @@ public final class StationRegistry {
         new Station("Ельск", Line.GOMEL_ELSK, StationType.FREIGHT, 165),
 
 
-        new Station ("Костюковка", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 12)
+        new Station ("Костюковка", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 12),
+
+            new Station("Василевичи", Line.GOMEL_LUNINETS, StationType.PASSENGER, 89)
 
         // новые станции добавляются в конец списка
     );
