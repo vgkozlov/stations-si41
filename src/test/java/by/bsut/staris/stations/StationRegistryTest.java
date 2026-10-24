@@ -3,6 +3,8 @@ package by.bsut.staris.stations;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -53,9 +55,7 @@ class StationRegistryTest {
     void containsElsk() {
         Station elsk = station("Ельск");
         assertEquals(StationType.FREIGHT, elsk.type());
-
         assertEquals(165, elsk.distanceFromGomelKm());
-
         assertEquals(Line.GOMEL_ELSK, elsk.line());
     }
 
@@ -96,5 +96,55 @@ class StationRegistryTest {
                 () -> registry.distanceBetween("Гомель-Пассажирский", "Ельск"));
     }
 
-    // тесты новых станций и методов добавляются в конец класса
+    // ===== НОВЫЕ ТЕСТЫ ДЛЯ МЕТОДА toMarkdownTable() =====
+
+    @Test
+    @DisplayName("toMarkdownTable: пустой реестр возвращает только шапку и разделитель")
+    void toMarkdownTableEmptyRegistry() {
+        StationRegistry empty = new StationRegistry(List.of());
+        String result = empty.toMarkdownTable();
+        String[] lines = result.split("\n", -1);
+        assertEquals(2, lines.length, "Пустая таблица должна содержать только шапку и разделитель");
+        assertEquals("| Станция | Направление | Тип | Расстояние от Гомеля, км |", lines[0]);
+        assertEquals("| --- | --- | --- | --- |", lines[1]);
+    }
+
+    @Test
+    @DisplayName("toMarkdownTable: таблица содержит все станции реестра")
+    void toMarkdownTableContainsAllStations() {
+        String result = registry.toMarkdownTable();
+        for (Station s : registry.all()) {
+            assertTrue(result.contains(s.name()), "В таблице отсутствует станция: " + s.name());
+        }
+    }
+
+    @Test
+    @DisplayName("toMarkdownTable: каждая строка таблицы начинается и заканчивается символом |")
+    void toMarkdownTableFormatIsValid() {
+        String result = registry.toMarkdownTable();
+        String[] lines = result.split("\n", -1);
+        assertTrue(lines.length >= 2, "Таблица должна содержать минимум шапку и разделитель");
+        for (String line : lines) {
+            assertTrue(line.startsWith("|"), "Строка должна начинаться с |: " + line);
+            assertTrue(line.endsWith("|"), "Строка должна заканчиваться на |: " + line);
+        }
+    }
+
+    @Test
+    @DisplayName("toMarkdownTable: строки данных соответствуют станциям в порядке реестра")
+    void toMarkdownTableDataMatchesRegistryOrder() {
+        String result = registry.toMarkdownTable();
+        String[] lines = result.split("\n", -1);
+
+        // Пропускаем шапку (0) и разделитель (1), начиная со строки 2 — данные
+        List<Station> stations = registry.all();
+        assertEquals(stations.size() + 2, lines.length,
+                "Количество строк таблицы должно быть = 2 (шапка+разделитель) + число станций");
+
+        for (int i = 0; i < stations.size(); i++) {
+            Station s = stations.get(i);
+            String expected = "| " + s.name() + " | " + s.line() + " | " + s.type() + " | " + s.distanceFromGomelKm() + " |";
+            assertEquals(expected, lines[i + 2], "Строка " + (i + 2) + " не совпадает");
+        }
+    }
 }
