@@ -32,21 +32,40 @@ public final class StationRegistry {
 
     // новые методы добавляются в конец класса
 
-    /** Возвращает модуль разности расстояний для станций одного направления. */
-    public int distanceBetween(String a, String b) {
-        Station first = stations.stream()
-                .filter(station -> station.name().equals(a))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Неизвестная станция: " + a));
-        Station second = stations.stream()
-                .filter(station -> station.name().equals(b))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Неизвестная станция: " + b));
+       /** Возвращает все станции справочника. */
+    public List<Station> getAll() {
+    return stations.stream()
+            .sorted(java.util.Comparator.comparingInt(
+                    Station::distanceFromGomelKm))
+            .toList();
+}
 
-        if (first.line() != second.line()) {
-            throw new IllegalArgumentException("Станции находятся на разных направлениях");
-        }
-
-        return Math.abs(first.distanceFromGomelKm() - second.distanceFromGomelKm());
+    /** Ищет станцию по названию. */
+    public java.util.Optional<Station> findByName(String name) {
+        return stations.stream()
+                .filter(station -> station.name().equals(name))
+                .findFirst();
     }
+
+    /** Возвращает станции указанной линии. */
+    public List<Station> findByLine(Line line) {
+        return stations.stream()
+                .filter(station -> station.line() == line)
+                .toList();
+    }
+
+    /** Возвращает станции указанного типа. */
+    public List<Station> findByType(StationType type) {
+        return stations.stream()
+                .filter(station -> station.type() == type)
+                .toList();
+    }
+
+    /** Возвращает самую удалённую от Гомеля станцию. */
+    public java.util.Optional<Station> farthest() {
+        return stations.stream()
+                .max(java.util.Comparator.comparingInt(
+                        Station::distanceFromGomelKm));
+    }
+
 }
