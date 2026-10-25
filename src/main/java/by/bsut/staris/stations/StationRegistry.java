@@ -2,21 +2,33 @@ package by.bsut.staris.stations;
 
 import java.util.List;
 
+
 /** Справочник станций Гомельского отделения Белорусской железной дороги. */
 public final class StationRegistry {
 
-    private final List<Station> stations = List.of(
-        new Station("Гомель-Пассажирский", Line.GOMEL_ZHLOBIN, StationType.PASSENGER, 0),
-        new Station("Ельск", Line.GOMEL_ELSK, StationType.FREIGHT, 165),
-        new Station("Костюковка", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 12),
-        new Station("Гомель-Сортировочный", Line.GOMEL_ZHLOBIN, StationType.MARSHALLING, 2)
-        // новые станции добавляются в конец списка
-    );
+    private final List<Station> stations;
+
+    /** Создаёт справочник с заданным набором станций. */
+    public StationRegistry(List<Station> stations) {
+        this.stations = List.copyOf(stations);
+    }
+
+    /** Создаёт справочник со стандартным набором станций. */
+    public StationRegistry() {
+        this.stations = List.of(
+            new Station("Гомель-Пассажирский", Line.GOMEL_ZHLOBIN, StationType.PASSENGER, 0),
+            new Station("Ельск", Line.GOMEL_ELSK, StationType.FREIGHT, 165),
+            new Station("Костюковка", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 12),
+            new Station("Гомель-Сортировочный", Line.GOMEL_ZHLOBIN, StationType.MARSHALLING, 2),
+            new Station("Рогачёв", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 113)
+        );
+    }
 
     /** Возвращает все станции справочника. */
     public List<Station> all() {
         return stations;
     }
+
 
     // новые методы добавляются в конец класса
 
