@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class StationRegistryTest {
 
@@ -94,6 +95,34 @@ class StationRegistryTest {
     void distanceBetweenRejectsDifferentLines() {
         assertThrows(IllegalArgumentException.class,
                 () -> registry.distanceBetween("Гомель-Пассажирский", "Ельск"));
+    }
+
+    @Test
+    @DisplayName("Справочник содержит станцию Рогачёв")
+    void containsRogachev() {
+        Station rogachev = station("Рогачёв");
+        assertEquals(Line.GOMEL_ZHLOBIN, rogachev.line());
+        assertEquals(StationType.INTERMEDIATE, rogachev.type());
+        assertEquals(113, rogachev.distanceFromGomelKm());
+    }
+
+    @Test
+    @DisplayName("farthest возвращает станцию с максимальным расстоянием от Гомеля")
+    void farthestReturnsMostDistantStation() {
+        assertEquals("Ельск", registry.farthest().orElseThrow().name());
+    }
+
+    @Test
+    @DisplayName("farthest возвращает Optional.empty для пустого справочника")
+    void farthestReturnsEmptyForEmptyRegistry() {
+        assertFalse(new StationRegistry(java.util.List.of()).farthest().isPresent());
+    }
+
+    @Test
+    @DisplayName("farthest возвращает единственную станцию в справочнике из одной станции")
+    void farthestReturnsSingleStation() {
+        Station only = new Station("Тестовая", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 7);
+        assertEquals(only, new StationRegistry(java.util.List.of(only)).farthest().orElseThrow());
     }
 
     // тесты новых станций и методов добавляются в конец класса
