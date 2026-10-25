@@ -40,6 +40,15 @@ class StationRegistryTest {
     }
 
     @Test
+    @DisplayName("Справочник содержит станцию Буда-Кошелёво с ожидаемыми атрибутами")
+    void containsBudaKoshelevo() {
+        Station buda = station("Буда-Кошелёво");
+        assertEquals(Line.GOMEL_ZHLOBIN, buda.line());
+        assertEquals(StationType.INTERMEDIATE, buda.type());
+        assertEquals(43, buda.distanceFromGomelKm());
+    }
+
+    @Test
     @DisplayName("Гомель-Сортировочный: сортировочная станция Жлобинского направления, 2 км")
     void containsGomelSorting() {
         Station gomel = station("Гомель-Сортировочный");
@@ -53,9 +62,7 @@ class StationRegistryTest {
     void containsElsk() {
         Station elsk = station("Ельск");
         assertEquals(StationType.FREIGHT, elsk.type());
-
         assertEquals(165, elsk.distanceFromGomelKm());
-
         assertEquals(Line.GOMEL_ELSK, elsk.line());
     }
 
