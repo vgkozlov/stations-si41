@@ -42,8 +42,8 @@ mvn verify
 | 14 | Логинов М. Р. | @deadowl1 | @mashaosmolovskaya |
 | 15 | Осмоловская М. А. | @mashaosmolovskaya | @dzpoz |
 | 16 | Поздняков Д. Ю. | @dzpoz | @redkotanya2005-ai |
-| 17 | Редько Т. В. | @redkotanya2005-ai | @Unukovskij |
-| 18 | Траньков Р. С. | — (аккаунт @romashkaoriginal не найден) | — |
+| 17 | Редько Т. В. | @redkotanya2005-ai | @CodyDuckDev |
+| 18 | Траньков Р. С. | @CodyDuckDev | @Unukovskij |
 | 19 | Унуковский Д. И. | @Unukovskij | @Milana11111 |
 | 20 | Хамицевич Д. И. | @Milana11111 | @polly-wvw |
 | 21 | Шуст П. А. | @polly-wvw | @ssusurus |
