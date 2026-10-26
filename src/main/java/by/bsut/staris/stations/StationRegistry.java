@@ -31,21 +31,6 @@ public final class StationRegistry {
         return stations;
     }
 
-        /**
-     * Возвращает станции заданного типа.
-     *
-     * @param type тип станции
-     * @return список станций; пустой список, если станций такого типа нет
-     * @throws IllegalArgumentException если type равен null
-     */
-    public List<Station> findByType(StationType type) {
-        if (type == null) {
-            throw new IllegalArgumentException("Тип станции не может быть null");
-        }
-        return stations.stream()
-                .filter(station -> station.type() == type)
-                .toList();
-    }
     /** Возвращает станцию, наиболее удалённую от Гомеля, если справочник не пуст. */
     public Optional<Station> farthest() {
         return stations.stream()
