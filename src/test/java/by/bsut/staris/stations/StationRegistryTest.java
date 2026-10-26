@@ -69,6 +69,15 @@ class StationRegistryTest {
     }
 
     @Test
+    @DisplayName("Справочник содержит станцию Речица с корректными атрибутами")
+    void containsRechitsa() {
+        Station rechitsa = station("Речица");
+        assertEquals(Line.GOMEL_KALINKOVICHI, rechitsa.line());
+        assertEquals(StationType.INTERMEDIATE, rechitsa.type());
+        assertEquals(44, rechitsa.distanceFromGomelKm());
+    }
+
+    @Test
     @DisplayName("findByType возвращает станции заданного типа")
     void findByTypeReturnsMatchingStations() {
         List<Station> passengerStations = registry.findByType(StationType.PASSENGER);
@@ -86,14 +95,8 @@ class StationRegistryTest {
     @DisplayName("findByType выбрасывает IllegalArgumentException для null")
     void findByTypeThrowsForNull() {
         assertThrows(IllegalArgumentException.class, () -> registry.findByType(null));
-    @DisplayName("Справочник содержит станцию Речица с корректными атрибутами")
-    void containsRechitsa() {
-        Station rechitsa = station("Речица");
-        assertEquals(Line.GOMEL_KALINKOVICHI, rechitsa.line());
-        assertEquals(StationType.INTERMEDIATE, rechitsa.type());
-        assertEquals(44, rechitsa.distanceFromGomelKm());
     }
-    
+
     @Test
     @DisplayName("Расстояние между станциями одного направления не зависит от порядка")
     void distanceBetweenUsesAbsoluteDifference() {
@@ -149,24 +152,5 @@ class StationRegistryTest {
     void farthestReturnsSingleStation() {
         Station only = new Station("Тестовая", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 7);
         assertEquals(only, new StationRegistry(java.util.List.of(only)).farthest().orElseThrow());
-    }
-
-    @Test
-    @DisplayName("findByType возвращает станции заданного типа")
-    void findByTypeReturnsMatchingStations() {
-        List<Station> passengerStations = registry.findByType(StationType.PASSENGER);
-        assertTrue(passengerStations.stream().anyMatch(s -> s.name().equals("Гомель-Пассажирский")));
-    }
-
-    @Test
-    @DisplayName("findByType возвращает пустой список, если станций такого типа нет")
-    void findByTypeReturnsEmptyListForUnknownType() {
-        assertTrue(registry.findByType(StationType.DIVISIONAL).isEmpty());
-    }
-
-    @Test
-    @DisplayName("findByType выбрасывает IllegalArgumentException для null")
-    void findByTypeThrowsForNull() {
-        assertThrows(IllegalArgumentException.class, () -> registry.findByType(null));
     }
 }
