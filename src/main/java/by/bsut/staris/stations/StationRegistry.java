@@ -8,12 +8,6 @@ public final class StationRegistry {
 
     private final List<Station> stations;
 
-        new Station("Ельск", Line.GOMEL_ELSK, StationType.FREIGHT, 165),
-
-
-        new Station ("Костюковка", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 12),
-
-        new Station("Речица", Line.GOMEL_KALINKOVICHI, StationType.INTERMEDIATE, 44)
     /** Создаёт справочник с заданным набором станций. */
     public StationRegistry(List<Station> stations) {
         this.stations = List.copyOf(stations);
@@ -25,8 +19,10 @@ public final class StationRegistry {
             new Station("Гомель-Пассажирский", Line.GOMEL_ZHLOBIN, StationType.PASSENGER, 0),
             new Station("Ельск", Line.GOMEL_ELSK, StationType.FREIGHT, 165),
             new Station("Костюковка", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 12),
+            new Station("Речица", Line.GOMEL_KALINKOVICHI, StationType.INTERMEDIATE, 44),
             new Station("Гомель-Сортировочный", Line.GOMEL_ZHLOBIN, StationType.MARSHALLING, 2),
             new Station("Рогачёв", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 113)
+            // новые станции добавляются в конец списка
         );
     }
 
@@ -40,8 +36,6 @@ public final class StationRegistry {
         return stations.stream()
                 .max(java.util.Comparator.comparingInt(Station::distanceFromGomelKm));
     }
-
-    // новые методы добавляются в конец класса
 
     /** Возвращает модуль разности расстояний для станций одного направления. */
     public int distanceBetween(String a, String b) {
@@ -59,5 +53,15 @@ public final class StationRegistry {
         }
 
         return Math.abs(first.distanceFromGomelKm() - second.distanceFromGomelKm());
+    }
+
+    /** Возвращает станции заданного типа. */
+    public List<Station> findByType(StationType type) {
+        if (type == null) {
+            throw new IllegalArgumentException("Тип станции не может быть null");
+        }
+        return stations.stream()
+                .filter(station -> station.type() == type)
+                .toList();
     }
 }
