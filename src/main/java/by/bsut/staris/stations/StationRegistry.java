@@ -1,6 +1,7 @@
 package by.bsut.staris.stations;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /** Справочник станций Гомельского отделения Белорусской железной дороги. */
 public final class StationRegistry {
@@ -10,17 +11,12 @@ public final class StationRegistry {
         new Station("Ельск", Line.GOMEL_ELSK, StationType.FREIGHT, 165),
         new Station("Костюковка", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 12),
         new Station("Гомель-Сортировочный", Line.GOMEL_ZHLOBIN, StationType.MARSHALLING, 2)
-        // новые станции добавляются в конец списка
     );
 
-    /** Возвращает все станции справочника. */
     public List<Station> all() {
         return stations;
     }
 
-    // новые методы добавляются в конец класса
-
-    /** Возвращает модуль разности расстояний для станций одного направления. */
     public int distanceBetween(String a, String b) {
         Station first = stations.stream()
                 .filter(station -> station.name().equals(a))
@@ -36,5 +32,18 @@ public final class StationRegistry {
         }
 
         return Math.abs(first.distanceFromGomelKm() - second.distanceFromGomelKm());
+    }
+
+    /**
+     * Возвращает список станций заданного направления.
+     * Если передан null — выбрасывает IllegalArgumentException.
+     */
+    public List<Station> findByLine(Line line) {
+        if (line == null) {
+            throw new IllegalArgumentException("Направление не может быть null");
+        }
+        return stations.stream()
+                .filter(station -> station.line() == line)
+                .collect(Collectors.toList());
     }
 }
