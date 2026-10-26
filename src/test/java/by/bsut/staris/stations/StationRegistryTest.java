@@ -8,7 +8,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class StationRegistryTest {
@@ -57,9 +56,7 @@ class StationRegistryTest {
     void containsElsk() {
         Station elsk = station("Ельск");
         assertEquals(StationType.FREIGHT, elsk.type());
-
         assertEquals(165, elsk.distanceFromGomelKm());
-
         assertEquals(Line.GOMEL_ELSK, elsk.line());
     }
 
@@ -71,7 +68,7 @@ class StationRegistryTest {
         assertEquals(12, kostyukovka.distanceFromGomelKm());
     }
 
-        @Test
+    @Test
     @DisplayName("findByType возвращает станции заданного типа")
     void findByTypeReturnsMatchingStations() {
         List<Station> passengerStations = registry.findByType(StationType.PASSENGER);
@@ -79,9 +76,10 @@ class StationRegistryTest {
     }
 
     @Test
-    @DisplayName("findByType возвращает пустой список, если станций такого типа нет")
-    void findByTypeReturnsEmptyListForUnknownType() {
-        assertTrue(registry.findByType(StationType.MARSHALLING).isEmpty());
+    @DisplayName("findByType возвращает пустой список для пустого справочника")
+    void findByTypeReturnsEmptyListForEmptyRegistry() {
+        StationRegistry emptyRegistry = new StationRegistry(java.util.List.of());
+        assertTrue(emptyRegistry.findByType(StationType.PASSENGER).isEmpty());
     }
 
     @Test
@@ -89,6 +87,7 @@ class StationRegistryTest {
     void findByTypeThrowsForNull() {
         assertThrows(IllegalArgumentException.class, () -> registry.findByType(null));
     }
+    
     @Test
     @DisplayName("Расстояние между станциями одного направления не зависит от порядка")
     void distanceBetweenUsesAbsoluteDifference() {
@@ -145,6 +144,4 @@ class StationRegistryTest {
         Station only = new Station("Тестовая", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 7);
         assertEquals(only, new StationRegistry(java.util.List.of(only)).farthest().orElseThrow());
     }
-
-    // тесты новых станций и методов добавляются в конец класса
 }
