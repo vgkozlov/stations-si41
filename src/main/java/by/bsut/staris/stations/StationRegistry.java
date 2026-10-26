@@ -16,11 +16,12 @@ public final class StationRegistry {
     /** Создаёт справочник со стандартным набором станций. */
     public StationRegistry() {
         this.stations = List.of(
-            new Station("Гомель-Пассажирский", Line.GOMEL_ZHLOBIN, StationType.PASSENGER, 0),
-            new Station("Ельск", Line.GOMEL_ELSK, StationType.FREIGHT, 165),
-            new Station("Костюковка", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 12),
-            new Station("Гомель-Сортировочный", Line.GOMEL_ZHLOBIN, StationType.MARSHALLING, 2),
-            new Station("Рогачёв", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 113)
+                new Station("Гомель-Пассажирский", Line.GOMEL_ZHLOBIN, StationType.PASSENGER, 0),
+                new Station("Ельск", Line.GOMEL_ELSK, StationType.FREIGHT, 165),
+                new Station("Костюковка", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 12),
+                new Station("Гомель-Сортировочный", Line.GOMEL_ZHLOBIN, StationType.MARSHALLING, 2),
+                new Station("Рогачёв", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 113),
+                new Station("Калинковичи", Line.GOMEL_KALINKOVICHI, StationType.DIVISIONAL, 133)
         );
     }
 
@@ -34,8 +35,6 @@ public final class StationRegistry {
         return stations.stream()
                 .max(java.util.Comparator.comparingInt(Station::distanceFromGomelKm));
     }
-
-    // новые методы добавляются в конец класса
 
     /** Возвращает модуль разности расстояний для станций одного направления. */
     public int distanceBetween(String a, String b) {
