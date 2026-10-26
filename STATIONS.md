@@ -6,8 +6,7 @@
 | Станция | Направление | Тип | Расстояние от Гомеля, км |
 | --- | --- | --- | --- |
 | Гомель-Пассажирский | GOMEL_ZHLOBIN | PASSENGER | 0 |
-
 | Ельск | GOMEL_ELSK | FREIGHT | 165 |
-
 | Костюковка | GOMEL_ZHLOBIN | INTERMEDIATE | 12 |
-
+| Гомель-Сортировочный | GOMEL_ZHLOBIN | MARSHALLING | 2 |
+| Рогачёв | GOMEL_ZHLOBIN | INTERMEDIATE | 113 |
