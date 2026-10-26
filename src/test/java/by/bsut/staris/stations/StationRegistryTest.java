@@ -54,9 +54,7 @@ class StationRegistryTest {
     void containsElsk() {
         Station elsk = station("Ельск");
         assertEquals(StationType.FREIGHT, elsk.type());
-
         assertEquals(165, elsk.distanceFromGomelKm());
-
         assertEquals(Line.GOMEL_ELSK, elsk.line());
     }
 
@@ -123,6 +121,16 @@ class StationRegistryTest {
     void farthestReturnsSingleStation() {
         Station only = new Station("Тестовая", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 7);
         assertEquals(only, new StationRegistry(java.util.List.of(only)).farthest().orElseThrow());
+    }
+
+    @Test
+    @DisplayName("Справочник содержит станцию Калинковичи")
+    void shouldContainKalinkovichiStation() {
+        StationRegistry registry = new StationRegistry();
+        boolean hasKalinkovichi = registry.all().stream()
+                .anyMatch(s -> s.name().equals("Калинковичи"));
+
+        assertTrue(hasKalinkovichi, "Станция Калинковичи должна присутствовать в справочнике");
     }
 
     // тесты новых станций и методов добавляются в конец класса
