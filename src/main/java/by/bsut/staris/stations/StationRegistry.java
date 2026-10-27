@@ -21,7 +21,8 @@ public final class StationRegistry {
             new Station("Костюковка", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 12),
             new Station("Речица", Line.GOMEL_KALINKOVICHI, StationType.INTERMEDIATE, 44),
             new Station("Гомель-Сортировочный", Line.GOMEL_ZHLOBIN, StationType.MARSHALLING, 2),
-            new Station("Рогачёв", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 113)
+            new Station("Рогачёв", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 113),
+            new Station("Новобелицкая", Line.GOMEL_HORNOSTAIVKA, StationType.INTERMEDIATE, 49)
             // новые станции добавляются в конец списка
         );
     }
