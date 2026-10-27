@@ -143,7 +143,7 @@ class StationRegistryTest {
     @Test
     @DisplayName("farthest возвращает станцию с максимальным расстоянием от Гомеля")
     void farthestReturnsMostDistantStation() {
-        assertEquals("Ельск", registry.farthest().orElseThrow().name());
+        assertEquals("Словечно", registry.farthest().orElseThrow().name());
     }
 
     @Test
