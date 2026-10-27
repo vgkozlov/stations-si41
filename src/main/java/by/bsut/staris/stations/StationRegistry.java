@@ -5,7 +5,7 @@ import java.util.Optional;
 
 /** Справочник станций Гомельского отделения Белорусской железной дороги. */
 public final class StationRegistry {
-
+   
     private final List<Station> stations;
 
     /** Создаёт справочник с заданным набором станций. */
@@ -22,10 +22,12 @@ public final class StationRegistry {
             new Station("Речица", Line.GOMEL_KALINKOVICHI, StationType.INTERMEDIATE, 44),
             new Station("Гомель-Сортировочный", Line.GOMEL_ZHLOBIN, StationType.MARSHALLING, 2),
             new Station("Рогачёв", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 113),
-            new Station("Новобелицкая", Line.GOMEL_HORNOSTAIVKA, StationType.INTERMEDIATE, 49)
+            new Station("Новобелицкая", Line.GOMEL_HORNOSTAIVKA, StationType.INTERMEDIATE, 49),
+            new Station ("Словечно", Line.KALINKOVICHI_SLOVECHNO, StationType.FREIGHT, 199)
             // новые станции добавляются в конец списка
         );
     }
+
 
     /** Возвращает все станции справочника. */
     public List<Station> all() {

@@ -69,6 +69,9 @@ class StationRegistryTest {
     }
 
     @Test
+ 
+    // тесты новых станций и методов добавляются в конец класса
+
     @DisplayName("Справочник содержит станцию Речица с корректными атрибутами")
     void containsRechitsa() {
         Station rechitsa = station("Речица");
@@ -140,7 +143,7 @@ class StationRegistryTest {
     @Test
     @DisplayName("farthest возвращает станцию с максимальным расстоянием от Гомеля")
     void farthestReturnsMostDistantStation() {
-        assertEquals("Ельск", registry.farthest().orElseThrow().name());
+        assertEquals("Словечно", registry.farthest().orElseThrow().name());
     }
 
     @Test
@@ -185,7 +188,15 @@ class StationRegistryTest {
         assertEquals(StationType.INTERMEDIATE, novobelitskaya.type());
         assertEquals(49, novobelitskaya.distanceFromGomelKm());
     }
-    
+
+    @DisplayName("Справочник содержит станцию Словечно с расстояние 199км")
+    void containsSlovechno() {
+        Station slovechno = station("Словечно");
+        assertEquals(StationType.FREIGHT, slovechno.type());
+        assertEquals(Line.KALINKOVICHI_SLOVECHNO, slovechno.line());
+        assertEquals(199, slovechno.distanceFromGomelKm());
+    }
+
     @Test
     @DisplayName("Костюковка относится к Жлобинскому направлению")
     void kostyukovkaBelongsToGomelZhIobinLine() {
@@ -202,4 +213,5 @@ class StationRegistryTest {
         assertEquals(StationType.INTERMEDIATE, result.get().type());
         assertEquals(12, result.get().distanceFromGomelKm());
     }
+
 }
