@@ -155,6 +155,27 @@ class StationRegistryTest {
         Station only = new Station("Тестовая", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 7);
         assertEquals(only, new StationRegistry(java.util.List.of(only)).farthest().orElseThrow());
     }
+        @Test
+    void findByNameShouldFindStationIgnoringCaseAndSpaces() {
+        StationRegistry registry = new StationRegistry();
+        java.util.Optional<Station> result = registry.findByName("  гомель-пассажирский  ");
+        assertTrue(result.isPresent());
+        assertEquals("Гомель-Пассажирский", result.get().name());
+    }
+
+    @Test
+    void findByNameShouldReturnEmptyForNonExistingStation() {
+        StationRegistry registry = new StationRegistry();
+        java.util.Optional<Station> result = registry.findByName("Станция Которой Нет");
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void findByNameShouldReturnEmptyForNull() {
+        StationRegistry registry = new StationRegistry();
+        java.util.Optional<Station> result = registry.findByName(null);
+        assertTrue(result.isEmpty());
+    }
     
     @Test
     @DisplayName("Справочник содержит станцию Новобелицкая с корректными атрибутами")

@@ -65,4 +65,13 @@ public final class StationRegistry {
                 .filter(station -> station.type() == type)
                 .toList();
     }
+     public java.util.Optional<Station> findByName(String name) {
+        if (name == null) {
+            return java.util.Optional.empty();
+        }
+        String searchName = name.trim();
+        return stations.stream()
+                .filter(station -> station.name().equalsIgnoreCase(searchName))
+                .findFirst();
+    }
 }
