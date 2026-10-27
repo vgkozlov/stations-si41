@@ -188,13 +188,30 @@ class StationRegistryTest {
         assertEquals(StationType.INTERMEDIATE, novobelitskaya.type());
         assertEquals(49, novobelitskaya.distanceFromGomelKm());
     }
-    
+
     @DisplayName("Справочник содержит станцию Словечно с расстояние 199км")
     void containsSlovechno() {
         Station slovechno = station("Словечно");
         assertEquals(StationType.FREIGHT, slovechno.type());
         assertEquals(Line.KALINKOVICHI_SLOVECHNO, slovechno.line());
         assertEquals(199, slovechno.distanceFromGomelKm());
+    }
+
+    @Test
+    @DisplayName("Костюковка относится к Жлобинскому направлению")
+    void kostyukovkaBelongsToGomelZhIobinLine() {
+        Station kostyukovka = station("Костюковка");
+        assertEquals(Line.GOMEL_ZHLOBIN, kostyukovka.line());
+    }
+
+    @Test
+    @DisplayName("findByName находит Костюковку независимо от регистра и пробелов")
+    void findByNameFindsKostyukovkaIgnoringCaseAndSpaces() {
+        java.util.Optional<Station> result = registry.findByName("  костюковка ");
+        assertTrue(result.isPresent());
+        assertEquals("Костюковка", result.get().name());
+        assertEquals(StationType.INTERMEDIATE, result.get().type());
+        assertEquals(12, result.get().distanceFromGomelKm());
     }
 
 }
