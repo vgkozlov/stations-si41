@@ -213,5 +213,61 @@ class StationRegistryTest {
         assertEquals(StationType.INTERMEDIATE, result.get().type());
         assertEquals(12, result.get().distanceFromGomelKm());
     }
+    @Test
+    @DisplayName("Расстояние между двумя станциями, не считая Гомель-Пассажирский, считается как модуль разности")
+    void distanceBetweenTwoStationsAwayFromGomel() {
+        // Рогачёв 113, Костюковка 12, Гомель-Сортировочный 2 (направление GOMEL_ZHLOBIN)
+        assertEquals(101, registry.distanceBetween("Костюковка", "Рогачёв"));
+        assertEquals(101, registry.distanceBetween("Рогачёв", "Костюковка"));
+        assertEquals(111, registry.distanceBetween("Гомель-Сортировочный", "Рогачёв"));
+        assertEquals(113, registry.distanceBetween("Гомель-Пассажирский", "Рогачёв"));
+    }
 
+    @Test
+    @DisplayName("Станции разных направлений с похожими названиями направлений выбрасывают исключение")
+    void distanceBetweenRejectsDifferentLinesWithoutGomelPassenger() {
+        // Речица (GOMEL_KALINKOVICHI) и Словечно (KALINKOVICHI_SLOVECHNO)
+        assertThrows(IllegalArgumentException.class,
+                () -> registry.distanceBetween("Речица", "Словечно"));
+        assertThrows(IllegalArgumentException.class,
+                () -> registry.distanceBetween("Словечно", "Речица"));
+        // Рогачёв (GOMEL_ZHLOBIN) и Речица (GOMEL_KALINKOVICHI)
+        assertThrows(IllegalArgumentException.class,
+                () -> registry.distanceBetween("Рогачёв", "Речица"));
+    }
+
+    @Test
+    @DisplayName("null вместо названия станции приводит к IllegalArgumentException")
+    void distanceBetweenRejectsNullArguments() {
+        assertThrows(IllegalArgumentException.class,
+                () -> registry.distanceBetween(null, "Костюковка"));
+        assertThrows(IllegalArgumentException.class,
+                () -> registry.distanceBetween("Костюковка", null));
+        assertThrows(IllegalArgumentException.class,
+                () -> registry.distanceBetween(null, null));
+    }
+
+    @Test
+    @DisplayName("Если обе станции неизвестны, выбрасывается IllegalArgumentException")
+    void distanceBetweenRejectsBothUnknownStations() {
+        assertThrows(IllegalArgumentException.class,
+                () -> registry.distanceBetween("Несуществующая-1", "Несуществующая-2"));
+    }
+
+    @Test
+    @DisplayName("Для всех пар станций справочника результат симметричен и неотрицателен, а для разных направлений выбрасывается исключение")
+    void distanceBetweenWorksForAllPairs() {
+        for (Station x : registry.all()) {
+            for (Station y : registry.all()) {
+                if (x.line() == y.line()) {
+                    int d = registry.distanceBetween(x.name(), y.name());
+                    assertTrue(d >= 0);
+                    assertEquals(d, registry.distanceBetween(y.name(), x.name()));
+                } else {
+                    assertThrows(IllegalArgumentException.class,
+                            () -> registry.distanceBetween(x.name(), y.name()));
+                }
+            }
+        }
+    }
 }
