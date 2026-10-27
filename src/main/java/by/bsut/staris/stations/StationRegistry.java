@@ -76,4 +76,14 @@ public final class StationRegistry {
                 .filter(station -> station.name().equalsIgnoreCase(searchName))
                 .findFirst();
     }
+
+     /** Возвращает станции заданного направления. */
+    public List<Station> findByLine(Line line) {
+        if (line == null) {
+            throw new IllegalArgumentException("Направление не может быть null");
+        }
+        return stations.stream()
+                .filter(station -> station.line() == line)
+                .toList();
+    }
 }
