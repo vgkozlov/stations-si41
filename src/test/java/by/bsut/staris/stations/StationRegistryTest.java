@@ -134,6 +134,8 @@ class StationRegistryTest {
         assertEquals(StationType.INTERMEDIATE, rogachev.type());
         assertEquals(113, rogachev.distanceFromGomelKm());
     }
+    
+    
 
     @Test
     @DisplayName("farthest возвращает станцию с максимальным расстоянием от Гомеля")
@@ -153,4 +155,14 @@ class StationRegistryTest {
         Station only = new Station("Тестовая", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 7);
         assertEquals(only, new StationRegistry(java.util.List.of(only)).farthest().orElseThrow());
     }
+    
+    @Test
+    @DisplayName("Справочник содержит станцию Новобелицкая с корректными атрибутами")
+    void containsNovobelitskaya() {
+        Station novobelitskaya = station("Новобелицкая");
+        assertEquals(Line.GOMEL_HORNOSTAIVKA, novobelitskaya.line());
+        assertEquals(StationType.INTERMEDIATE, novobelitskaya.type());
+        assertEquals(49, novobelitskaya.distanceFromGomelKm());
+    }
+    
 }
