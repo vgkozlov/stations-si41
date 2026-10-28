@@ -8,6 +8,7 @@ public enum Line {
     GOMEL_BRYANSK,
     KALINKOVICHI_SLOVECHNO,
     GOMEL_ELSK,
-    GOMEL_HORNOSTAIVKA
+    GOMEL_HORNOSTAIVKA,
+    GOMEL_MINSK
     // новые направления добавляются в конец списка
 }

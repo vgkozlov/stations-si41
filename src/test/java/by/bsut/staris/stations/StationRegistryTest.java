@@ -158,6 +158,7 @@ class StationRegistryTest {
         Station only = new Station("Тестовая", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 7);
         assertEquals(only, new StationRegistry(java.util.List.of(only)).farthest().orElseThrow());
     }
+
         @Test
     void findByNameShouldFindStationIgnoringCaseAndSpaces() {
         StationRegistry registry = new StationRegistry();
@@ -189,6 +190,7 @@ class StationRegistryTest {
         assertEquals(49, novobelitskaya.distanceFromGomelKm());
     }
 
+    @Test
     @DisplayName("Справочник содержит станцию Словечно с расстояние 199км")
     void containsSlovechno() {
         Station slovechno = station("Словечно");
@@ -252,6 +254,15 @@ class StationRegistryTest {
     void distanceBetweenRejectsBothUnknownStations() {
         assertThrows(IllegalArgumentException.class,
                 () -> registry.distanceBetween("Несуществующая-1", "Несуществующая-2"));
+    }
+
+    @Test
+    @DisplayName("Справочник содержит станцию Красный Берег с корректными атрибутами")
+    void containsKrasnyBereg() {
+        Station krasnyBereg = station("Красный Берег");
+        assertEquals(Line.GOMEL_MINSK, krasnyBereg.line());
+        assertEquals(StationType.INTERMEDIATE, krasnyBereg.type());
+        assertEquals(104, krasnyBereg.distanceFromGomelKm());
     }
 
     @Test
