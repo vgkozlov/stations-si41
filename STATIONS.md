@@ -13,4 +13,5 @@
 | Гомель-Сортировочный | GOMEL_ZHLOBIN | MARSHALLING | 2 |
 | Рогачёв | GOMEL_ZHLOBIN | INTERMEDIATE | 113 |
 | Новобелицкая | GOMEL_HORNOSTAIVKA | INTERMEDIATE | 49 |
+| Красный Берег | GOMEL_MINSK | INTERMEDIATE | 104 |
 

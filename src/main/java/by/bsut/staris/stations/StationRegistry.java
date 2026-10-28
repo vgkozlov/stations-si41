@@ -23,11 +23,11 @@ public final class StationRegistry {
             new Station("Гомель-Сортировочный", Line.GOMEL_ZHLOBIN, StationType.MARSHALLING, 2),
             new Station("Рогачёв", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 113),
             new Station("Новобелицкая", Line.GOMEL_HORNOSTAIVKA, StationType.INTERMEDIATE, 49),
-            new Station ("Словечно", Line.KALINKOVICHI_SLOVECHNO, StationType.FREIGHT, 199)
+            new Station ("Словечно", Line.KALINKOVICHI_SLOVECHNO, StationType.FREIGHT, 199),
+            new Station("Красный Берег", Line.GOMEL_MINSK, StationType.INTERMEDIATE, 104)
             // новые станции добавляются в конец списка
         );
     }
-
 
     /** Возвращает все станции справочника. */
     public List<Station> all() {
