@@ -14,4 +14,5 @@
 | Рогачёв | GOMEL_ZHLOBIN | INTERMEDIATE | 113 |
 | Новобелицкая | GOMEL_HORNOSTAIVKA | INTERMEDIATE | 49 |
 | Красный Берег | GOMEL_MINSK | INTERMEDIATE | 104 |
+| Тереховка | GOMEL_BAKHMACH | INTERMEDIATE | 42 |
 
