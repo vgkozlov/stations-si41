@@ -69,7 +69,7 @@ class StationRegistryTest {
     }
 
     @Test
- 
+
     // тесты новых станций и методов добавляются в конец класса
 
     @DisplayName("Справочник содержит станцию Речица с корректными атрибутами")
@@ -264,7 +264,6 @@ class StationRegistryTest {
         assertEquals(StationType.INTERMEDIATE, krasnyBereg.type());
         assertEquals(104, krasnyBereg.distanceFromGomelKm());
     }
-
     @Test
     @DisplayName("Для всех пар станций справочника результат симметричен и неотрицателен, а для разных направлений выбрасывается исключение")
     void distanceBetweenWorksForAllPairs() {
@@ -281,4 +280,14 @@ class StationRegistryTest {
             }
         }
     }
+
+    @Test
+    @DisplayName("Справочник содержит станцию Тереховка на направлении Гомель – Бахмач, 42 км от Гомеля")
+    void containsTerekhovka() {
+        Station terekhovka = station("Тереховка");
+        assertEquals(Line.GOMEL_BAKHMACH, terekhovka.line());
+        assertEquals(StationType.INTERMEDIATE, terekhovka.type());
+        assertEquals(42, terekhovka.distanceFromGomelKm());
+    }
 }
+

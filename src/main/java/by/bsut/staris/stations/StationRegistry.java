@@ -24,7 +24,8 @@ public final class StationRegistry {
             new Station("Рогачёв", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 113),
             new Station("Новобелицкая", Line.GOMEL_HORNOSTAIVKA, StationType.INTERMEDIATE, 49),
             new Station ("Словечно", Line.KALINKOVICHI_SLOVECHNO, StationType.FREIGHT, 199),
-            new Station("Красный Берег", Line.GOMEL_MINSK, StationType.INTERMEDIATE, 104)
+            new Station("Красный Берег", Line.GOMEL_MINSK, StationType.INTERMEDIATE, 104),
+            new Station("Тереховка", Line.GOMEL_BAKHMACH, StationType.INTERMEDIATE, 42)
             // новые станции добавляются в конец списка
         );
     }
