@@ -289,5 +289,14 @@ class StationRegistryTest {
         assertEquals(StationType.INTERMEDIATE, terekhovka.type());
         assertEquals(42, terekhovka.distanceFromGomelKm());
     }
+
+    @Test
+    @DisplayName("Справочник содержит станцию Демехи с корректными атрибутами")
+    void containsDemehi() {
+        Station demehi = station("Демехи");
+        assertEquals(Line.GOMEL_KALINKOVICHI, demehi.line());
+        assertEquals(StationType.INTERMEDIATE, demehi.type());
+        assertEquals(25, demehi.distanceFromGomelKm());
+    }
 }
 
