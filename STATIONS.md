@@ -16,4 +16,4 @@
 | Красный Берег | GOMEL_MINSK | INTERMEDIATE | 104 |
 | Тереховка | GOMEL_BAKHMACH | INTERMEDIATE | 42 |
 | Демехи | GOMEL_KALINKOVICHI | INTERMEDIATE | 25 |
-
+| Добруш | GOMEL_BRYANSK | FREIGHT | 25 |

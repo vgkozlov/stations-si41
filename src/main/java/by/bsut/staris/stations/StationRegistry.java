@@ -2,6 +2,7 @@ package by.bsut.staris.stations;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Comparator;
 
 /** Справочник станций Гомельского отделения Белорусской железной дороги. */
 public final class StationRegistry {
@@ -26,7 +27,8 @@ public final class StationRegistry {
             new Station ("Словечно", Line.KALINKOVICHI_SLOVECHNO, StationType.FREIGHT, 199),
             new Station("Красный Берег", Line.GOMEL_MINSK, StationType.INTERMEDIATE, 104),
             new Station("Тереховка", Line.GOMEL_BAKHMACH, StationType.INTERMEDIATE, 42),
-            new Station("Демехи", Line.GOMEL_KALINKOVICHI, StationType.INTERMEDIATE, 25)
+            new Station("Демехи", Line.GOMEL_KALINKOVICHI, StationType.INTERMEDIATE, 25),
+            new Station("Добруш", Line.GOMEL_BRYANSK, StationType.FREIGHT, 25)
             // новые станции добавляются в конец списка
         );
     }
@@ -77,5 +79,13 @@ public final class StationRegistry {
         return stations.stream()
                 .filter(station -> station.name().equalsIgnoreCase(searchName))
                 .findFirst();
+    }
+
+    /** Возвращает станции по расстоянию, при равенстве — по наименованию. */
+    public List<Station> sortedByDistance() {
+        return stations.stream()
+                .sorted(Comparator.comparingInt(Station::distanceFromGomelKm)
+                        .thenComparing(Station::name))
+                .toList();
     }
 }
