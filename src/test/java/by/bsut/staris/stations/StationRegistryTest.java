@@ -298,5 +298,15 @@ class StationRegistryTest {
         assertEquals(StationType.INTERMEDIATE, demehi.type());
         assertEquals(25, demehi.distanceFromGomelKm());
     }
+
+    @Test
+    @DisplayName("Добруш: Брянское направление, грузовая станция, 25 км от Гомеля")
+    void containsDobrush() {
+        Station dobrush = station("Добруш");
+        assertEquals("Добруш", dobrush.name());
+        assertEquals(Line.GOMEL_BRYANSK, dobrush.line());
+        assertEquals(StationType.FREIGHT, dobrush.type());
+        assertEquals(25, dobrush.distanceFromGomelKm());
+    }
 }
 
