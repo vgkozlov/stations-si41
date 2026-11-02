@@ -81,4 +81,36 @@ public final class StationRegistry {
                 .filter(station -> station.name().equalsIgnoreCase(searchName))
                 .findFirst();
     }
+
+    /**
+     * Возвращает станции на расстоянии не более maxKm от Гомеля.
+     *
+     * @param maxKm максимальное расстояние в километрах (неотрицательное)
+     * @return список станций в пределах радиуса
+     * @throws IllegalArgumentException если maxKm отрицательное
+     */
+    public List<Station> withinRadius(int maxKm) {
+        if (maxKm < 0) {
+            throw new IllegalArgumentException("maxKm must be non-negative: " + maxKm);
+        }
+        return stations.stream()
+                .filter(station -> station.distanceFromGomelKm() <= maxKm)
+                .toList();
+    }
+
+    /** Формирует таблицу станций в формате файла STATIONS.md. */
+    public String toMarkdownTable() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("| Станция | Направление | Тип | Расстояние от Гомеля, км |\n");
+        sb.append("| --- | --- | --- | --- |\n");
+
+        for (Station s : stations) {
+            sb.append("| ").append(s.name())
+              .append(" | ").append(s.line())
+              .append(" | ").append(s.type())
+              .append(" | ").append(s.distanceFromGomelKm())
+              .append(" |\n");
+        }
+        return sb.toString().trim();
+    }
 }
