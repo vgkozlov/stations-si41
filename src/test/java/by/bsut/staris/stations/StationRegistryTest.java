@@ -43,6 +43,15 @@ class StationRegistryTest {
     }
 
     @Test
+    @DisplayName("Справочник содержит станцию Буда-Кошелёво с ожидаемыми атрибутами")
+    void containsBudaKoshelevo() {
+        Station buda = station("Буда-Кошелёво");
+        assertEquals(Line.GOMEL_ZHLOBIN, buda.line());
+        assertEquals(StationType.INTERMEDIATE, buda.type());
+        assertEquals(43, buda.distanceFromGomelKm());
+    }
+
+    @Test
     @DisplayName("Гомель-Сортировочный: сортировочная станция Жлобинского направления, 2 км")
     void containsGomelSorting() {
         Station gomel = station("Гомель-Сортировочный");
@@ -69,9 +78,6 @@ class StationRegistryTest {
     }
 
     @Test
-
-    // тесты новых станций и методов добавляются в конец класса
-
     @DisplayName("Справочник содержит станцию Речица с корректными атрибутами")
     void containsRechitsa() {
         Station rechitsa = station("Речица");
@@ -137,8 +143,6 @@ class StationRegistryTest {
         assertEquals(StationType.INTERMEDIATE, rogachev.type());
         assertEquals(113, rogachev.distanceFromGomelKm());
     }
-    
-    
 
     @Test
     @DisplayName("farthest возвращает станцию с максимальным расстоянием от Гомеля")
@@ -159,7 +163,7 @@ class StationRegistryTest {
         assertEquals(only, new StationRegistry(java.util.List.of(only)).farthest().orElseThrow());
     }
 
-        @Test
+    @Test
     void findByNameShouldFindStationIgnoringCaseAndSpaces() {
         StationRegistry registry = new StationRegistry();
         java.util.Optional<Station> result = registry.findByName("  гомель-пассажирский  ");
@@ -180,7 +184,7 @@ class StationRegistryTest {
         java.util.Optional<Station> result = registry.findByName(null);
         assertTrue(result.isEmpty());
     }
-    
+
     @Test
     @DisplayName("Справочник содержит станцию Новобелицкая с корректными атрибутами")
     void containsNovobelitskaya() {
@@ -215,10 +219,10 @@ class StationRegistryTest {
         assertEquals(StationType.INTERMEDIATE, result.get().type());
         assertEquals(12, result.get().distanceFromGomelKm());
     }
+
     @Test
     @DisplayName("Расстояние между двумя станциями, не считая Гомель-Пассажирский, считается как модуль разности")
     void distanceBetweenTwoStationsAwayFromGomel() {
-        // Рогачёв 113, Костюковка 12, Гомель-Сортировочный 2 (направление GOMEL_ZHLOBIN)
         assertEquals(101, registry.distanceBetween("Костюковка", "Рогачёв"));
         assertEquals(101, registry.distanceBetween("Рогачёв", "Костюковка"));
         assertEquals(111, registry.distanceBetween("Гомель-Сортировочный", "Рогачёв"));
@@ -228,12 +232,10 @@ class StationRegistryTest {
     @Test
     @DisplayName("Станции разных направлений с похожими названиями направлений выбрасывают исключение")
     void distanceBetweenRejectsDifferentLinesWithoutGomelPassenger() {
-        // Речица (GOMEL_KALINKOVICHI) и Словечно (KALINKOVICHI_SLOVECHNO)
         assertThrows(IllegalArgumentException.class,
                 () -> registry.distanceBetween("Речица", "Словечно"));
         assertThrows(IllegalArgumentException.class,
                 () -> registry.distanceBetween("Словечно", "Речица"));
-        // Рогачёв (GOMEL_ZHLOBIN) и Речица (GOMEL_KALINKOVICHI)
         assertThrows(IllegalArgumentException.class,
                 () -> registry.distanceBetween("Рогачёв", "Речица"));
     }
@@ -264,6 +266,7 @@ class StationRegistryTest {
         assertEquals(StationType.INTERMEDIATE, krasnyBereg.type());
         assertEquals(104, krasnyBereg.distanceFromGomelKm());
     }
+
     @Test
     @DisplayName("Для всех пар станций справочника результат симметричен и неотрицателен, а для разных направлений выбрасывается исключение")
     void distanceBetweenWorksForAllPairs() {
@@ -299,21 +302,21 @@ class StationRegistryTest {
         assertEquals(25, demehi.distanceFromGomelKm());
     }
 
-        @Test
+    @Test
     @DisplayName("toMarkdownTable формирует таблицу со всеми станциями из STATIONS.md")
     void toMarkdownTableMatchesFileContent() throws Exception {
         String fileContent = java.nio.file.Files.readString(java.nio.file.Path.of("STATIONS.md"));
         int tableStartIndex = fileContent.indexOf("| Станция |");
         String expectedTable = fileContent.substring(tableStartIndex).trim();
         String actualTable = registry.toMarkdownTable();
-        
+
         String[] expectedLines = expectedTable.split("\n");
         String[] actualLines = actualTable.split("\n");
-        
+
         assertEquals(expectedLines.length, actualLines.length, "Разное количество строк");
         assertEquals(expectedLines[0].trim(), actualLines[0].trim(), "Заголовки не совпадают");
         assertEquals(expectedLines[1].trim(), actualLines[1].trim(), "Разделители не совпадают");
-        
+
         for (int i = 2; i < expectedLines.length; i++) {
             String expectedLine = expectedLines[i].trim();
             boolean found = false;
@@ -344,5 +347,38 @@ class StationRegistryTest {
             assertTrue(table.contains("| " + s.name() + " |"));
         }
     }
-}
 
+    // ==========================================
+    // ТЕСТЫ ДЛЯ ЗАДАЧИ 2: withinRadius
+    // ==========================================
+
+    @Test
+    @DisplayName("withinRadius возвращает пустой список, если справочник пуст")
+    void withinRadiusReturnsEmptyWhenRegistryIsEmpty() {
+        StationRegistry emptyRegistry = new StationRegistry(java.util.List.of());
+        assertTrue(emptyRegistry.withinRadius(100).isEmpty());
+    }
+
+    @Test
+    @DisplayName("withinRadius выбрасывает IllegalArgumentException при отрицательном значении")
+    void withinRadiusThrowsOnNegativeArgument() {
+        assertThrows(IllegalArgumentException.class, () -> registry.withinRadius(-1));
+    }
+
+    @Test
+    @DisplayName("withinRadius возвращает станции в пределах радиуса")
+    void withinRadiusReturnsStationsWithinLimit() {
+        List<Station> result = registry.withinRadius(50);
+        assertFalse(result.isEmpty());
+        assertTrue(result.stream().allMatch(s -> s.distanceFromGomelKm() <= 50));
+    }
+
+    @Test
+    @DisplayName("withinRadius включает станцию, находящуюся ровно на границе радиуса")
+    void withinRadiusIncludesBoundaryValue() {
+        // Гомель-Пассажирский находится на расстоянии 0 км.
+        // Если радиус = 0, станция должна быть включена (<= 0).
+        List<Station> result = registry.withinRadius(0);
+        assertTrue(result.stream().anyMatch(s -> s.name().equals("Гомель-Пассажирский")));
+    }
+}

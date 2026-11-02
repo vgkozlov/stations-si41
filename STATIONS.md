@@ -6,6 +6,7 @@
 | Станция | Направление | Тип | Расстояние от Гомеля, км |
 | --- | --- | --- | --- |
 | Гомель-Пассажирский | GOMEL_ZHLOBIN | PASSENGER | 0 |
+| Буда-Кошелёво | GOMEL_ZHLOBIN | INTERMEDIATE | 43 |
 | Ельск | GOMEL_ELSK | FREIGHT | 165 |
 | Костюковка | GOMEL_ZHLOBIN | INTERMEDIATE | 12 |
 | Словечно | KALINKOVICHI_SLOVECHNO | FREIGHT | 199 |
@@ -16,4 +17,3 @@
 | Красный Берег | GOMEL_MINSK | INTERMEDIATE | 104 |
 | Тереховка | GOMEL_BAKHMACH | INTERMEDIATE | 42 |
 | Демехи | GOMEL_KALINKOVICHI | INTERMEDIATE | 25 |
-
