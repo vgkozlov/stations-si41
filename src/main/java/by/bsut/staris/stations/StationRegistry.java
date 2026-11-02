@@ -1,25 +1,47 @@
 package by.bsut.staris.stations;
 
 import java.util.List;
+import java.util.Optional;
 
 /** Справочник станций Гомельского отделения Белорусской железной дороги. */
 public final class StationRegistry {
 
-    private final List<Station> stations = List.of(
-        new Station("Гомель-Пассажирский", Line.GOMEL_ZHLOBIN, StationType.PASSENGER, 0),
-        new Station("Ельск", Line.GOMEL_ELSK, StationType.FREIGHT, 165),
-        new Station("Костюковка", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 12),
-        new Station("Гомель-Сортировочный", Line.GOMEL_ZHLOBIN, StationType.MARSHALLING, 2),
-        new Station("Буда-Кошелёво", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 43)
-        // новые станции добавляются в конец списка
-    );
+    private final List<Station> stations;
+
+    /** Создаёт справочник с заданным набором станций. */
+    public StationRegistry(List<Station> stations) {
+        this.stations = List.copyOf(stations);
+    }
+
+    /** Создаёт справочник со стандартным набором станций. */
+    public StationRegistry() {
+        this.stations = List.of(
+            new Station("Гомель-Пассажирский", Line.GOMEL_ZHLOBIN, StationType.PASSENGER, 0),
+            new Station("Буда-Кошелёво", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 43),
+            new Station("Ельск", Line.GOMEL_ELSK, StationType.FREIGHT, 165),
+            new Station("Костюковка", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 12),
+            new Station("Речица", Line.GOMEL_KALINKOVICHI, StationType.INTERMEDIATE, 44),
+            new Station("Гомель-Сортировочный", Line.GOMEL_ZHLOBIN, StationType.MARSHALLING, 2),
+            new Station("Рогачёв", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 113),
+            new Station("Новобелицкая", Line.GOMEL_HORNOSTAIVKA, StationType.INTERMEDIATE, 49),
+            new Station("Словечно", Line.KALINKOVICHI_SLOVECHNO, StationType.FREIGHT, 199),
+            new Station("Красный Берег", Line.GOMEL_MINSK, StationType.INTERMEDIATE, 104),
+            new Station("Тереховка", Line.GOMEL_BAKHMACH, StationType.INTERMEDIATE, 42),
+            new Station("Демехи", Line.GOMEL_KALINKOVICHI, StationType.INTERMEDIATE, 25)
+            // новые станции добавляются в конец списка
+        );
+    }
 
     /** Возвращает все станции справочника. */
     public List<Station> all() {
         return stations;
     }
 
-    // новые методы добавляются в конец класса
+    /** Возвращает станцию, наиболее удалённую от Гомеля, если справочник не пуст. */
+    public Optional<Station> farthest() {
+        return stations.stream()
+                .max(java.util.Comparator.comparingInt(Station::distanceFromGomelKm));
+    }
 
     /** Возвращает модуль разности расстояний для станций одного направления. */
     public int distanceBetween(String a, String b) {
@@ -37,5 +59,26 @@ public final class StationRegistry {
         }
 
         return Math.abs(first.distanceFromGomelKm() - second.distanceFromGomelKm());
+    }
+
+    /** Возвращает станции заданного типа. */
+    public List<Station> findByType(StationType type) {
+        if (type == null) {
+            throw new IllegalArgumentException("Тип станции не может быть null");
+        }
+        return stations.stream()
+                .filter(station -> station.type() == type)
+                .toList();
+    }
+
+    /** Поиск станции по названию без учёта регистра и начальных/конечных пробелов. */
+    public Optional<Station> findByName(String name) {
+        if (name == null) {
+            return Optional.empty();
+        }
+        String searchName = name.trim();
+        return stations.stream()
+                .filter(station -> station.name().equalsIgnoreCase(searchName))
+                .findFirst();
     }
 }
