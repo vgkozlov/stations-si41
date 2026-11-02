@@ -301,4 +301,38 @@ class StationRegistryTest {
         assertEquals(StationType.INTERMEDIATE, demehi.type());
         assertEquals(25, demehi.distanceFromGomelKm());
     }
+
+    // ==========================================
+    // ТЕСТЫ ДЛЯ ЗАДАЧИ 2: withinRadius
+    // ==========================================
+
+    @Test
+    @DisplayName("withinRadius возвращает пустой список, если справочник пуст")
+    void withinRadiusReturnsEmptyWhenRegistryIsEmpty() {
+        StationRegistry emptyRegistry = new StationRegistry(java.util.List.of());
+        assertTrue(emptyRegistry.withinRadius(100).isEmpty());
+    }
+
+    @Test
+    @DisplayName("withinRadius выбрасывает IllegalArgumentException при отрицательном значении")
+    void withinRadiusThrowsOnNegativeArgument() {
+        assertThrows(IllegalArgumentException.class, () -> registry.withinRadius(-1));
+    }
+
+    @Test
+    @DisplayName("withinRadius возвращает станции в пределах радиуса")
+    void withinRadiusReturnsStationsWithinLimit() {
+        List<Station> result = registry.withinRadius(50);
+        assertFalse(result.isEmpty());
+        assertTrue(result.stream().allMatch(s -> s.distanceFromGomelKm() <= 50));
+    }
+
+    @Test
+    @DisplayName("withinRadius включает станцию, находящуюся ровно на границе радиуса")
+    void withinRadiusIncludesBoundaryValue() {
+        // Гомель-Пассажирский находится на расстоянии 0 км.
+        // Если радиус = 0, станция должна быть включена (<= 0).
+        List<Station> result = registry.withinRadius(0);
+        assertTrue(result.stream().anyMatch(s -> s.name().equals("Гомель-Пассажирский")));
+    }
 }
