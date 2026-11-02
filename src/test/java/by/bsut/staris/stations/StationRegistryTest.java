@@ -376,8 +376,6 @@ class StationRegistryTest {
     @Test
     @DisplayName("withinRadius включает станцию, находящуюся ровно на границе радиуса")
     void withinRadiusIncludesBoundaryValue() {
-        // Гомель-Пассажирский находится на расстоянии 0 км.
-        // Если радиус = 0, станция должна быть включена (<= 0).
         List<Station> result = registry.withinRadius(0);
         assertTrue(result.stream().anyMatch(s -> s.name().equals("Гомель-Пассажирский")));
     }
