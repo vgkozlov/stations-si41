@@ -302,6 +302,53 @@ class StationRegistryTest {
         assertEquals(25, demehi.distanceFromGomelKm());
     }
 
+        @Test
+    @DisplayName("toMarkdownTable формирует таблицу со всеми станциями из STATIONS.md")
+    void toMarkdownTableMatchesFileContent() throws Exception {
+        String fileContent = java.nio.file.Files.readString(java.nio.file.Path.of("STATIONS.md"));
+        int tableStartIndex = fileContent.indexOf("| Станция |");
+        String expectedTable = fileContent.substring(tableStartIndex).trim();
+        String actualTable = registry.toMarkdownTable();
+        
+        String[] expectedLines = expectedTable.split("\n");
+        String[] actualLines = actualTable.split("\n");
+        
+        assertEquals(expectedLines.length, actualLines.length, "Разное количество строк");
+        assertEquals(expectedLines[0].trim(), actualLines[0].trim(), "Заголовки не совпадают");
+        assertEquals(expectedLines[1].trim(), actualLines[1].trim(), "Разделители не совпадают");
+        
+        for (int i = 2; i < expectedLines.length; i++) {
+            String expectedLine = expectedLines[i].trim();
+            boolean found = false;
+            for (int j = 2; j < actualLines.length; j++) {
+                if (actualLines[j].trim().equals(expectedLine)) {
+                    found = true;
+                    break;
+                }
+            }
+            assertTrue(found, "В сгенерированной таблице нет строки: " + expectedLine);
+        }
+    }
+
+    @Test
+    @DisplayName("toMarkdownTable для пустого справочника возвращает только заголовок и разделитель")
+    void toMarkdownTableEmptyRegistryBoundary() {
+        StationRegistry emptyRegistry = new StationRegistry(List.of());
+        String table = emptyRegistry.toMarkdownTable();
+        String expected = "| Станция | Направление | Тип | Расстояние от Гомеля, км |\n| --- | --- | --- | --- |";
+        assertEquals(expected, table);
+    }
+
+    @Test
+    @DisplayName("toMarkdownTable содержит все станции из справочника")
+    void toMarkdownTableContainsAllStations() {
+        String table = registry.toMarkdownTable();
+        for (Station s : registry.all()) {
+            assertTrue(table.contains("| " + s.name() + " |"));
+        }
+    }
+}
+
     // ==========================================
     // ТЕСТЫ ДЛЯ ЗАДАЧИ 2: withinRadius
     // ==========================================

@@ -81,4 +81,20 @@ public final class StationRegistry {
                 .filter(station -> station.name().equalsIgnoreCase(searchName))
                 .findFirst();
     }
+
+        /** Формирует таблицу станций в формате файла STATIONS.md.*/
+        public String toMarkdownTable() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("| Станция | Направление | Тип | Расстояние от Гомеля, км |\n");
+        sb.append("| --- | --- | --- | --- |\n");
+        
+        for (Station s : stations) {
+            sb.append("| ").append(s.name())
+              .append(" | ").append(s.line())
+              .append(" | ").append(s.type())
+              .append(" | ").append(s.distanceFromGomelKm())
+              .append(" |\n");
+        }
+        return sb.toString().trim();
+    }
 }
