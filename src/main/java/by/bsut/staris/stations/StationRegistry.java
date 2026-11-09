@@ -2,6 +2,7 @@ package by.bsut.staris.stations;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Comparator;
 
 
 
@@ -86,7 +87,7 @@ public final class StationRegistry {
     }
 
         /** Формирует таблицу станций в формате файла STATIONS.md.*/
-        public String toMarkdownTable() {
+    public String toMarkdownTable() {
         StringBuilder sb = new StringBuilder();
         sb.append("| Станция | Направление | Тип | Расстояние от Гомеля, км |\n");
         sb.append("| --- | --- | --- | --- |\n");
@@ -124,10 +125,12 @@ public final class StationRegistry {
                 .sorted()
                 .toList();
     }
+      
+    /** Возвращает станции по расстоянию, при равенстве — по наименованию. */
     public List<Station> sortedByDistance() {
-     return stations.stream()
-             .sorted(Comparator.comparingInt(Station::distanceFromGomelKm)
-                     .thenComparing(Station::name))
-             .toList();
- }
+        return stations.stream()
+                .sorted(Comparator.comparingInt(Station::distanceFromGomelKm)
+                        .thenComparing(Station::name))
+                .toList();
+    }
 }

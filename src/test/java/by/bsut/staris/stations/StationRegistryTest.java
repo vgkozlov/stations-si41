@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.HashSet;
 
 
 
@@ -473,6 +474,65 @@ class StationRegistryTest {
         assertEquals(Line.GOMEL_BRYANSK, dobrush.line());
         assertEquals(StationType.FREIGHT, dobrush.type());
         assertEquals(25, dobrush.distanceFromGomelKm());
+    }
+
+
+    @Test
+    @DisplayName("Станции упорядочены по возрастанию расстояния")
+    void sortedByDistanceOrdersByDistance() {
+        Station far = new Station("Дальняя", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 50);
+        Station near = new Station("Ближняя", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 2);
+        Station middle = new Station("Средняя", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 12);
+        StationRegistry sample = new StationRegistry(List.of(far, near, middle));
+
+        assertEquals(List.of(near, middle, far), sample.sortedByDistance());
+    }
+
+    @Test
+    @DisplayName("При одинаковом расстоянии станции упорядочены по наименованию")
+    void sortedByDistanceBreaksTiesByName() {
+        Station beta = new Station("Бета", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 10);
+        Station alpha = new Station("Альфа", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 10);
+        StationRegistry sample = new StationRegistry(List.of(beta, alpha));
+
+        assertEquals(List.of(alpha, beta), sample.sortedByDistance());
+    }
+
+    @Test
+    @DisplayName("Пустой справочник даёт пустой результат сортировки")
+    void sortedByDistanceHandlesEmptyRegistry() {
+        StationRegistry empty = new StationRegistry(List.of());
+
+        assertTrue(empty.sortedByDistance().isEmpty());
+    }
+
+    @Test
+    @DisplayName("Сортировка не изменяет исходный порядок справочника")
+    void sortedByDistanceDoesNotChangeRegistry() {
+        Station far = new Station("Дальняя", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 50);
+        Station near = new Station("Ближняя", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 2);
+        StationRegistry sample = new StationRegistry(List.of(far, near));
+        List<Station> before = List.copyOf(sample.all());
+
+        sample.sortedByDistance();
+
+        assertEquals(before, sample.all());
+    }
+
+    @Test
+    @DisplayName("Сортировка основного справочника сохраняет все станции и их атрибуты")
+    void sortedByDistanceKeepsAllStations() {
+        List<Station> sorted = registry.sortedByDistance();
+
+        assertEquals(registry.all().size(), sorted.size());
+        assertEquals(new HashSet<>(registry.all()), new HashSet<>(sorted));
+        for (int i = 1; i < sorted.size(); i++) {
+            Station previous = sorted.get(i - 1);
+            Station current = sorted.get(i);
+            assertTrue(previous.distanceFromGomelKm() < current.distanceFromGomelKm()
+                    || (previous.distanceFromGomelKm() == current.distanceFromGomelKm()
+                        && previous.name().compareTo(current.name()) <= 0));
+        }
     }
 }
 
