@@ -4,10 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Comparator;
 
-
-
-import java.util.Comparator;
-
 /** Справочник станций Гомельского отделения Белорусской железной дороги. */
 public final class StationRegistry {
 
@@ -106,7 +102,6 @@ public final class StationRegistry {
     }
 
     /** Формирует таблицу станций в формате файла STATIONS.md. */
-        /** Формирует таблицу станций в формате файла STATIONS.md.*/
     public String toMarkdownTable() {
         StringBuilder sb = new StringBuilder();
         sb.append("| Станция | Направление | Тип | Расстояние от Гомеля, км |\n");
@@ -120,7 +115,6 @@ public final class StationRegistry {
               .append(" |\n");
         }
         return sb.toString().trim();
-
     }
 
     /** Возвращает станции заданного направления. */
@@ -133,7 +127,7 @@ public final class StationRegistry {
                 .toList();
     }
 
-   /**Возвращает наименования станций с заданным префиксом без учёта регистра,*/
+    /** Возвращает наименования станций с заданным префиксом без учёта регистра. */
     public List<String> namesStartingWith(String prefix) {
         if (prefix == null) {
             throw new IllegalArgumentException("Префикс не может быть null");
@@ -145,7 +139,7 @@ public final class StationRegistry {
                 .sorted()
                 .toList();
     }
-      
+
     /** Возвращает станции по расстоянию, при равенстве — по наименованию. */
     public List<Station> sortedByDistance() {
         return stations.stream()
