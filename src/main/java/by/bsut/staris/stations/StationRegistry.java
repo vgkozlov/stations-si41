@@ -2,6 +2,11 @@ package by.bsut.staris.stations;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Comparator;
+
+
+
+import java.util.Comparator;
 
 /** Справочник станций Гомельского отделения Белорусской железной дороги. */
 public final class StationRegistry {
@@ -27,7 +32,9 @@ public final class StationRegistry {
             new Station("Словечно", Line.KALINKOVICHI_SLOVECHNO, StationType.FREIGHT, 199),
             new Station("Красный Берег", Line.GOMEL_MINSK, StationType.INTERMEDIATE, 104),
             new Station("Тереховка", Line.GOMEL_BAKHMACH, StationType.INTERMEDIATE, 42),
-            new Station("Демехи", Line.GOMEL_KALINKOVICHI, StationType.INTERMEDIATE, 25)
+            new Station("Демехи", Line.GOMEL_KALINKOVICHI, StationType.INTERMEDIATE, 25),
+            new Station("Житковичи", Line.LUNINETS_KALINKOVICHI, StationType.INTERMEDIATE, 215),
+            new Station("Добруш", Line.GOMEL_BRYANSK, StationType.FREIGHT, 25)
             // новые станции добавляются в конец списка
         );
     }
@@ -99,6 +106,7 @@ public final class StationRegistry {
     }
 
     /** Формирует таблицу станций в формате файла STATIONS.md. */
+        /** Формирует таблицу станций в формате файла STATIONS.md.*/
     public String toMarkdownTable() {
         StringBuilder sb = new StringBuilder();
         sb.append("| Станция | Направление | Тип | Расстояние от Гомеля, км |\n");
@@ -112,5 +120,37 @@ public final class StationRegistry {
               .append(" |\n");
         }
         return sb.toString().trim();
+
+    }
+
+    /** Возвращает станции заданного направления. */
+    public List<Station> findByLine(Line line) {
+        if (line == null) {
+            throw new IllegalArgumentException("Направление не может быть null");
+        }
+        return stations.stream()
+                .filter(station -> station.line() == line)
+                .toList();
+    }
+
+   /**Возвращает наименования станций с заданным префиксом без учёта регистра,*/
+    public List<String> namesStartingWith(String prefix) {
+        if (prefix == null) {
+            throw new IllegalArgumentException("Префикс не может быть null");
+        }
+        String searchPrefix = prefix.trim().toLowerCase();
+        return stations.stream()
+                .map(Station::name)
+                .filter(name -> name.toLowerCase().startsWith(searchPrefix))
+                .sorted()
+                .toList();
+    }
+      
+    /** Возвращает станции по расстоянию, при равенстве — по наименованию. */
+    public List<Station> sortedByDistance() {
+        return stations.stream()
+                .sorted(Comparator.comparingInt(Station::distanceFromGomelKm)
+                        .thenComparing(Station::name))
+                .toList();
     }
 }

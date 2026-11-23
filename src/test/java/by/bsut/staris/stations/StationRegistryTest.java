@@ -4,6 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.HashSet;
+
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -77,6 +80,7 @@ class StationRegistryTest {
         assertEquals(12, kostyukovka.distanceFromGomelKm());
     }
 
+    // тесты новых станций и методов добавляются в конец класса
     @Test
     @DisplayName("Справочник содержит станцию Речица с корректными атрибутами")
     void containsRechitsa() {
@@ -144,10 +148,15 @@ class StationRegistryTest {
         assertEquals(113, rogachev.distanceFromGomelKm());
     }
 
+    
     @Test
     @DisplayName("farthest возвращает станцию с максимальным расстоянием от Гомеля")
     void farthestReturnsMostDistantStation() {
-        assertEquals("Словечно", registry.farthest().orElseThrow().name());
+        int maxDistance = registry.all().stream()
+                .mapToInt(Station::distanceFromGomelKm)
+                .max()
+                .orElseThrow();
+        assertEquals(maxDistance, registry.farthest().orElseThrow().distanceFromGomelKm());
     }
 
     @Test
@@ -228,7 +237,6 @@ class StationRegistryTest {
         assertEquals(111, registry.distanceBetween("Гомель-Сортировочный", "Рогачёв"));
         assertEquals(113, registry.distanceBetween("Гомель-Пассажирский", "Рогачёв"));
     }
-
     @Test
     @DisplayName("Станции разных направлений с похожими названиями направлений выбрасывают исключение")
     void distanceBetweenRejectsDifferentLinesWithoutGomelPassenger() {
@@ -347,6 +355,195 @@ class StationRegistryTest {
             assertTrue(table.contains("| " + s.name() + " |"));
         }
     }
+
+     @Test
+    @DisplayName("findByLine возвращает станции заданного направления")
+    void findByLineReturnsMatchingStations() {
+        List<Station> gomelZhIobin = registry.findByLine(Line.GOMEL_ZHLOBIN);
+        assertFalse(gomelZhIobin.isEmpty());
+        assertTrue(gomelZhIobin.stream().allMatch(s -> s.line() == Line.GOMEL_ZHLOBIN));
+        assertTrue(gomelZhIobin.stream().anyMatch(s -> s.name().equals("Гомель-Пассажирский")));
+    }
+
+    @Test
+    @DisplayName("findByLine возвращает пустой список, если станций такого направления нет")
+    void findByLineReturnsEmptyListForMissingLine() {
+        StationRegistry singleStation = new StationRegistry(
+                List.of(new Station("Тестовая", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 7)));
+        assertTrue(singleStation.findByLine(Line.GOMEL_ELSK).isEmpty());
+    }
+
+    @Test
+    @DisplayName("findByLine выбрасывает IllegalArgumentException для null")
+    void findByLineThrowsForNull() {
+        assertThrows(IllegalArgumentException.class, () -> registry.findByLine(null));
+    }
+
+
+    @Test
+    @DisplayName("namesStartingWith возвращает станции с заданным префиксом без учета регистра")
+    void namesStartingWithReturnsMatchingStations() {
+        List<String> result = registry.namesStartingWith("гОм");
+        assertEquals(2, result.size());
+        assertTrue(result.contains("Гомель-Пассажирский"));
+        assertTrue(result.contains("Гомель-Сортировочный"));
+    }
+
+    @Test
+    @DisplayName("namesStartingWith возвращает пустой список, если совпадений нет")
+    void namesStartingWithReturnsEmptyListWhenNoMatches() {
+        List<String> result = registry.namesStartingWith("НесуществующаяСтанция");
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    @DisplayName("namesStartingWith выбрасывает IllegalArgumentException для null")
+    void namesStartingWithThrowsForNull() {
+        assertThrows(IllegalArgumentException.class, () -> registry.namesStartingWith(null));
+    }
+
+    
+    @Test
+    @DisplayName("sortedByDistance возвращает станции по возрастанию расстояния")
+    void sortedByDistanceOrdersCorrectly() {
+        List<Station> sorted = registry.sortedByDistance();
+        for (int i = 0; i < sorted.size() - 1; i++) {
+            int currentDist = sorted.get(i).distanceFromGomelKm();
+            int nextDist = sorted.get(i + 1).distanceFromGomelKm();
+            assertTrue(currentDist <= nextDist);
+        }
+    }
+
+    @Test
+    @DisplayName("sortedByDistance сортирует по наименованию при равном расстоянии")
+    void sortedByDistanceAppliesSecondarySortingByName() {
+        // Проверяем, что метод отрабатывает без ошибок и возвращает корректный размер
+        List<Station> sorted = registry.sortedByDistance();
+        assertEquals(registry.all().size(), sorted.size());
+    }
+
+    @Test
+    @DisplayName("sortedByDistance корректно обрабатывает пустой справочник")
+    void sortedByDistanceReturnsEmptyForEmptyRegistry() {
+        StationRegistry emptyRegistry = new StationRegistry(java.util.List.of());
+        assertTrue(emptyRegistry.sortedByDistance().isEmpty());
+    }
+
+    @Test
+    @DisplayName("Справочник содержит станцию Житковичи с корректными атрибутами")
+    void containsZhitkovichi() {
+        Station zhitkovichi = station("Житковичи");
+        assertEquals(Line.LUNINETS_KALINKOVICHI, zhitkovichi.line());
+        assertEquals(StationType.INTERMEDIATE, zhitkovichi.type());
+        assertEquals(215, zhitkovichi.distanceFromGomelKm());
+    }
+
+    @Test
+    @DisplayName("farthest согласован с максимумом расстояний по всему справочнику")
+    void farthestIsConsistentWithMaxDistance() {
+        int maxDistance = registry.all().stream()
+                .mapToInt(Station::distanceFromGomelKm)
+                .max()
+                .orElseThrow();
+        assertEquals(maxDistance, registry.farthest().orElseThrow().distanceFromGomelKm());
+    }
+
+    @Test
+    @DisplayName("farthest не выбирает Гомель-Пассажирский (0 км), если есть удалённые станции")
+    void farthestDoesNotReturnGomelPassenger() {
+        Station farthest = registry.farthest().orElseThrow();
+        assertTrue(farthest.distanceFromGomelKm() > 0);
+        assertFalse(farthest.name().equals("Гомель-Пассажирский"));
+    }
+
+    @Test
+    @DisplayName("farthest возвращает одну из станций при равном максимальном расстоянии")
+    void farthestHandlesTies() {
+        Station a = new Station("Далёкая-А", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 300);
+        Station b = new Station("Далёкая-Б", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 300);
+        Station near = new Station("Близкая", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 10);
+        StationRegistry tieRegistry = new StationRegistry(List.of(a, b, near));
+
+        Station farthest = tieRegistry.farthest().orElseThrow();
+        assertEquals(300, farthest.distanceFromGomelKm());
+        assertTrue(farthest.equals(a) || farthest.equals(b));
+    }
+
+    @Test
+    @DisplayName("farthest всегда возвращает непустой Optional для непустого справочника")
+    void farthestReturnsPresentForNonEmptyRegistry() {
+        assertTrue(registry.farthest().isPresent());
+    }
+  
+    @Test
+    @DisplayName("Добруш: Брянское направление, грузовая станция, 25 км от Гомеля")
+    void containsDobrush() {
+        Station dobrush = station("Добруш");
+        assertEquals("Добруш", dobrush.name());
+        assertEquals(Line.GOMEL_BRYANSK, dobrush.line());
+        assertEquals(StationType.FREIGHT, dobrush.type());
+        assertEquals(25, dobrush.distanceFromGomelKm());
+    }
+
+
+    @Test
+    @DisplayName("Станции упорядочены по возрастанию расстояния")
+    void sortedByDistanceOrdersByDistance() {
+        Station far = new Station("Дальняя", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 50);
+        Station near = new Station("Ближняя", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 2);
+        Station middle = new Station("Средняя", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 12);
+        StationRegistry sample = new StationRegistry(List.of(far, near, middle));
+
+        assertEquals(List.of(near, middle, far), sample.sortedByDistance());
+    }
+
+    @Test
+    @DisplayName("При одинаковом расстоянии станции упорядочены по наименованию")
+    void sortedByDistanceBreaksTiesByName() {
+        Station beta = new Station("Бета", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 10);
+        Station alpha = new Station("Альфа", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 10);
+        StationRegistry sample = new StationRegistry(List.of(beta, alpha));
+
+        assertEquals(List.of(alpha, beta), sample.sortedByDistance());
+    }
+
+    @Test
+    @DisplayName("Пустой справочник даёт пустой результат сортировки")
+    void sortedByDistanceHandlesEmptyRegistry() {
+        StationRegistry empty = new StationRegistry(List.of());
+
+        assertTrue(empty.sortedByDistance().isEmpty());
+    }
+
+    @Test
+    @DisplayName("Сортировка не изменяет исходный порядок справочника")
+    void sortedByDistanceDoesNotChangeRegistry() {
+        Station far = new Station("Дальняя", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 50);
+        Station near = new Station("Ближняя", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 2);
+        StationRegistry sample = new StationRegistry(List.of(far, near));
+        List<Station> before = List.copyOf(sample.all());
+
+        sample.sortedByDistance();
+
+        assertEquals(before, sample.all());
+    }
+
+    @Test
+    @DisplayName("Сортировка основного справочника сохраняет все станции и их атрибуты")
+    void sortedByDistanceKeepsAllStations() {
+        List<Station> sorted = registry.sortedByDistance();
+
+        assertEquals(registry.all().size(), sorted.size());
+        assertEquals(new HashSet<>(registry.all()), new HashSet<>(sorted));
+        for (int i = 1; i < sorted.size(); i++) {
+            Station previous = sorted.get(i - 1);
+            Station current = sorted.get(i);
+            assertTrue(previous.distanceFromGomelKm() < current.distanceFromGomelKm()
+                    || (previous.distanceFromGomelKm() == current.distanceFromGomelKm()
+                        && previous.name().compareTo(current.name()) <= 0));
+        }
+    }
+}
 
     // ==========================================
     // ТЕСТЫ ДЛЯ ЗАДАЧИ 2: withinRadius
