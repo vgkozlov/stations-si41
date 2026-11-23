@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.HashSet;
 
-
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -148,7 +146,6 @@ class StationRegistryTest {
         assertEquals(113, rogachev.distanceFromGomelKm());
     }
 
-    
     @Test
     @DisplayName("farthest возвращает станцию с максимальным расстоянием от Гомеля")
     void farthestReturnsMostDistantStation() {
@@ -237,6 +234,7 @@ class StationRegistryTest {
         assertEquals(111, registry.distanceBetween("Гомель-Сортировочный", "Рогачёв"));
         assertEquals(113, registry.distanceBetween("Гомель-Пассажирский", "Рогачёв"));
     }
+
     @Test
     @DisplayName("Станции разных направлений с похожими названиями направлений выбрасывают исключение")
     void distanceBetweenRejectsDifferentLinesWithoutGomelPassenger() {
@@ -356,7 +354,7 @@ class StationRegistryTest {
         }
     }
 
-     @Test
+    @Test
     @DisplayName("findByLine возвращает станции заданного направления")
     void findByLineReturnsMatchingStations() {
         List<Station> gomelZhIobin = registry.findByLine(Line.GOMEL_ZHLOBIN);
@@ -378,7 +376,6 @@ class StationRegistryTest {
     void findByLineThrowsForNull() {
         assertThrows(IllegalArgumentException.class, () -> registry.findByLine(null));
     }
-
 
     @Test
     @DisplayName("namesStartingWith возвращает станции с заданным префиксом без учета регистра")
@@ -402,7 +399,6 @@ class StationRegistryTest {
         assertThrows(IllegalArgumentException.class, () -> registry.namesStartingWith(null));
     }
 
-    
     @Test
     @DisplayName("sortedByDistance возвращает станции по возрастанию расстояния")
     void sortedByDistanceOrdersCorrectly() {
@@ -474,7 +470,7 @@ class StationRegistryTest {
     void farthestReturnsPresentForNonEmptyRegistry() {
         assertTrue(registry.farthest().isPresent());
     }
-  
+
     @Test
     @DisplayName("Добруш: Брянское направление, грузовая станция, 25 км от Гомеля")
     void containsDobrush() {
@@ -484,7 +480,6 @@ class StationRegistryTest {
         assertEquals(StationType.FREIGHT, dobrush.type());
         assertEquals(25, dobrush.distanceFromGomelKm());
     }
-
 
     @Test
     @DisplayName("Станции упорядочены по возрастанию расстояния")
@@ -543,7 +538,6 @@ class StationRegistryTest {
                         && previous.name().compareTo(current.name()) <= 0));
         }
     }
-}
 
     // ==========================================
     // ТЕСТЫ ДЛЯ ЗАДАЧИ 2: withinRadius
@@ -573,8 +567,6 @@ class StationRegistryTest {
     @Test
     @DisplayName("withinRadius включает станцию, находящуюся ровно на границе радиуса")
     void withinRadiusIncludesBoundaryValue() {
-        // Гомель-Пассажирский находится на расстоянии 0 км.
-        // Если радиус = 0, станция должна быть включена (<= 0).
         List<Station> result = registry.withinRadius(0);
         assertTrue(result.stream().anyMatch(s -> s.name().equals("Гомель-Пассажирский")));
     }
