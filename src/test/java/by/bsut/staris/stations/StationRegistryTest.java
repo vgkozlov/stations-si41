@@ -543,7 +543,6 @@ class StationRegistryTest {
                         && previous.name().compareTo(current.name()) <= 0));
         }
     }
-}
 
     // ==========================================
     // ТЕСТЫ ДЛЯ ЗАДАЧИ 2: withinRadius
