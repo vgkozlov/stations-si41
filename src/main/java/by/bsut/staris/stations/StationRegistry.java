@@ -4,13 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Comparator;
 
-
-
-import java.util.Comparator;
-
 /** Справочник станций Гомельского отделения Белорусской железной дороги. */
 public final class StationRegistry {
-   
+
     private final List<Station> stations;
 
     /** Создаёт справочник с заданным набором станций. */
@@ -22,13 +18,14 @@ public final class StationRegistry {
     public StationRegistry() {
         this.stations = List.of(
             new Station("Гомель-Пассажирский", Line.GOMEL_ZHLOBIN, StationType.PASSENGER, 0),
+            new Station("Буда-Кошелёво", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 43),
             new Station("Ельск", Line.GOMEL_ELSK, StationType.FREIGHT, 165),
             new Station("Костюковка", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 12),
             new Station("Речица", Line.GOMEL_KALINKOVICHI, StationType.INTERMEDIATE, 44),
             new Station("Гомель-Сортировочный", Line.GOMEL_ZHLOBIN, StationType.MARSHALLING, 2),
             new Station("Рогачёв", Line.GOMEL_ZHLOBIN, StationType.INTERMEDIATE, 113),
             new Station("Новобелицкая", Line.GOMEL_HORNOSTAIVKA, StationType.INTERMEDIATE, 49),
-            new Station ("Словечно", Line.KALINKOVICHI_SLOVECHNO, StationType.FREIGHT, 199),
+            new Station("Словечно", Line.KALINKOVICHI_SLOVECHNO, StationType.FREIGHT, 199),
             new Station("Красный Берег", Line.GOMEL_MINSK, StationType.INTERMEDIATE, 104),
             new Station("Тереховка", Line.GOMEL_BAKHMACH, StationType.INTERMEDIATE, 42),
             new Station("Демехи", Line.GOMEL_KALINKOVICHI, StationType.INTERMEDIATE, 25),
@@ -76,9 +73,11 @@ public final class StationRegistry {
                 .filter(station -> station.type() == type)
                 .toList();
     }
-     public java.util.Optional<Station> findByName(String name) {
+
+    /** Поиск станции по названию без учёта регистра и начальных/конечных пробелов. */
+    public Optional<Station> findByName(String name) {
         if (name == null) {
-            return java.util.Optional.empty();
+            return Optional.empty();
         }
         String searchName = name.trim();
         return stations.stream()
@@ -86,12 +85,28 @@ public final class StationRegistry {
                 .findFirst();
     }
 
-        /** Формирует таблицу станций в формате файла STATIONS.md.*/
+    /**
+     * Возвращает станции на расстоянии не более maxKm от Гомеля.
+     *
+     * @param maxKm максимальное расстояние в километрах (неотрицательное)
+     * @return список станций в пределах радиуса
+     * @throws IllegalArgumentException если maxKm отрицательное
+     */
+    public List<Station> withinRadius(int maxKm) {
+        if (maxKm < 0) {
+            throw new IllegalArgumentException("maxKm must be non-negative: " + maxKm);
+        }
+        return stations.stream()
+                .filter(station -> station.distanceFromGomelKm() <= maxKm)
+                .toList();
+    }
+
+    /** Формирует таблицу станций в формате файла STATIONS.md. */
     public String toMarkdownTable() {
         StringBuilder sb = new StringBuilder();
         sb.append("| Станция | Направление | Тип | Расстояние от Гомеля, км |\n");
         sb.append("| --- | --- | --- | --- |\n");
-        
+
         for (Station s : stations) {
             sb.append("| ").append(s.name())
               .append(" | ").append(s.line())
@@ -100,7 +115,6 @@ public final class StationRegistry {
               .append(" |\n");
         }
         return sb.toString().trim();
-
     }
 
     /** Возвращает станции заданного направления. */
@@ -113,7 +127,7 @@ public final class StationRegistry {
                 .toList();
     }
 
-   /**Возвращает наименования станций с заданным префиксом без учёта регистра,*/
+    /** Возвращает наименования станций с заданным префиксом без учёта регистра. */
     public List<String> namesStartingWith(String prefix) {
         if (prefix == null) {
             throw new IllegalArgumentException("Префикс не может быть null");
@@ -125,7 +139,7 @@ public final class StationRegistry {
                 .sorted()
                 .toList();
     }
-      
+
     /** Возвращает станции по расстоянию, при равенстве — по наименованию. */
     public List<Station> sortedByDistance() {
         return stations.stream()
