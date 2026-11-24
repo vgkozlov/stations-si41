@@ -1,3 +1,4 @@
+
 package by.bsut.staris.stations;
 
 /** Железнодорожное направление. */
@@ -6,6 +7,10 @@ public enum Line {
     GOMEL_KALINKOVICHI,
     GOMEL_BAKHMACH,
     GOMEL_BRYANSK,
-    GOMEL_ELSK
+    KALINKOVICHI_SLOVECHNO,
+    GOMEL_ELSK,
+    GOMEL_HORNOSTAIVKA,
+    GOMEL_MINSK,
+    LUNINETS_KALINKOVICHI
     // новые направления добавляются в конец списка
 }
